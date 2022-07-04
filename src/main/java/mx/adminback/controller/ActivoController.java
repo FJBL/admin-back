@@ -25,7 +25,7 @@ import mx.adminback.utils.CustomResponse.BusinessResponseCode;
 
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
+@CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
 		RequestMethod.DELETE })
 
 @RequestMapping("admin")
@@ -38,13 +38,13 @@ public class ActivoController {
 	@Autowired
 	private SequenceGeneratorService sequenceGeneratorService;
 
-	@GetMapping("desde/{desde}")
-	public ResponseEntity<CustomResponse> listAllDeudor(@PathVariable int desde) {
+	@GetMapping("desde/{desde}/{tipo}")
+	public ResponseEntity<CustomResponse> listAllDeudor(@PathVariable int desde,@PathVariable boolean tipo) {
 		ResponseEntity<CustomResponse> response = null;
 
 		log.debug("GET all usuarios con prestamo");
 
-		CustomResponse customResponse = userService.findByActive(desde);
+		CustomResponse customResponse = userService.findByActive(desde,tipo);
 		if (customResponse != null) {
 			response = ResponseEntity.ok().body(customResponse);
 		} else {

@@ -1,5 +1,6 @@
 package mx.adminback.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,12 +20,14 @@ public class ActivoService implements IActivoService {
 	@Autowired
 	private UsersRepository userRepository;
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public CustomResponse<List<Users>> findByActive(int desde) {
+	public CustomResponse<List<Users>> findByActive(int desde,boolean tipo) {
 
 		CustomResponse<List<Users>> response = null;
+		
 		int inicio=desde+5;
-		int totalRegistros=userRepository.findAll().size();
+		int totalRegistros= userRepository.findByEstado(tipo).size();
 
 		if(inicio>=totalRegistros) {
 			inicio=totalRegistros;
@@ -35,9 +38,10 @@ public class ActivoService implements IActivoService {
 		}
 		log.info("desde -----> "+ (desde) +"suma "+ (inicio));
 
-		List<Users> listApps = userRepository.findAll().subList(desde, inicio);
-		if (!listApps.isEmpty()) {
-			response = new CustomResponse(BusinessResponseCode.OK, "Listado de deudores", listApps,totalRegistros);
+		List<Users> listUsers = userRepository.findByEstado(tipo).subList(desde, inicio);
+		
+		if (!listUsers.isEmpty()) {
+			response = new CustomResponse(BusinessResponseCode.OK, "Listado de deudores", listUsers,totalRegistros);
 		}
 		return response;
 
@@ -60,12 +64,12 @@ public class ActivoService implements IActivoService {
 	}
 
 	@Override
-	public CustomResponse<Users> save(Users about) {
+	public CustomResponse<Users> save(Users deudor) {
 
 		CustomResponse<Users> customResponse = null;
 		// Validation of bussiness restrictions
-
-		Users aboutSaved = userRepository.save(about);
+		log.info("save deudor "+deudor);
+		Users aboutSaved = userRepository.save(deudor);
 		customResponse = new CustomResponse<>(BusinessResponseCode.OK, "Insertado correctamnete", aboutSaved,0);
 
 		return customResponse;
@@ -75,9 +79,9 @@ public class ActivoService implements IActivoService {
 	public CustomResponse<Users> update(String id, Users user) {
 
 		CustomResponse<Users> customResponse = null;
-
 		Optional<Users> userOpt = userRepository.findById(id);
-		log.info("" + userOpt);
+		
+		log.info("user update " + userOpt);
 		if (userOpt.isPresent()) {
 
 			Users userUpd = userOpt.get();
@@ -86,6 +90,8 @@ public class ActivoService implements IActivoService {
 			userUpd.setFecha(user.getFecha());
 			userUpd.setMotivo(user.getMotivo());
 			userUpd.setName(user.getName());
+			userUpd.setEstado(user.isEstado());
+			userUpd.setFechapago(new Date());
 			userRepository.save(userUpd);
 			customResponse = new CustomResponse<>(BusinessResponseCode.OK, "Actualizacion exitosa", userUpd,0);
 

@@ -7,7 +7,7 @@ import mx.adminback.utils.CustomResponse;
 
 public interface IActivoService {
 	public CustomResponse<Users> findByActiveId(String id);
-	public CustomResponse<List<Users>> findByActive(int desde);
+	public CustomResponse<List<Users>> findByActive(int desde,boolean tipo);
 	public CustomResponse<Users> delete(Users about, String idUser);
 	public CustomResponse<Users> save(Users about);
 	public CustomResponse<Users> update(String id, Users about);

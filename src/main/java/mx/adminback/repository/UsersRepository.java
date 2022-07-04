@@ -8,4 +8,6 @@ public interface UsersRepository extends MongoRepository<Users, String>{
 	
 
 	 List<Users> findByNameLikeOrderByNameAsc(String nombre);
+	 
+	 List<Users> findByEstado( boolean lDelete);
 }

@@ -24,5 +24,7 @@ public class UsersDTO {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", locale = "es_MX",timezone = "America/Mexico_City") 
 	private Date fecha;
 	private Long cantidad;
+	private boolean estado;
+	private Date fechapago;
 
 }
